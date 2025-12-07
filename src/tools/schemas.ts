@@ -9,7 +9,7 @@ export const OllamaGenerateSchema = z.object({
   prompt: z.string().min(1, "Prompt is required"),
   system: z.string().optional(),
   temperature: z.number().min(0).max(2).optional(),
-  max_tokens: z.number().int().positive().max(100000).optional(),
+  max_tokens: z.number().int().positive().max(131072).optional(),
 });
 export type OllamaGenerateArgs = z.infer<typeof OllamaGenerateSchema>;
 
