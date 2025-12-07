@@ -103,6 +103,25 @@ claude mcp list
 /mcp
 ```
 
+## Auto-approve Tool Calls (Optional)
+
+By default, Claude Code asks for confirmation each time an Ollama tool is called. To skip confirmations, add the following to `~/.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__ollama__ollama_generate",
+      "mcp__ollama__ollama_chat",
+      "mcp__ollama__ollama_list",
+      "mcp__ollama__ollama_show",
+      "mcp__ollama__ollama_pull",
+      "mcp__ollama__ollama_embeddings"
+    ]
+  }
+}
+```
+
 ## Environment Variables
 
 | Variable | Default | Description |
