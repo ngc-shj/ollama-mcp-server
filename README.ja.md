@@ -103,6 +103,25 @@ claude mcp list
 /mcp
 ```
 
+## ツール呼び出しの自動許可（オプション）
+
+デフォルトでは、Claude Code は Ollama ツールを呼び出すたびに確認を求めます。確認をスキップするには、`~/.claude/settings.json` に以下を追加してください：
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__ollama__ollama_generate",
+      "mcp__ollama__ollama_chat",
+      "mcp__ollama__ollama_list",
+      "mcp__ollama__ollama_show",
+      "mcp__ollama__ollama_pull",
+      "mcp__ollama__ollama_embeddings"
+    ]
+  }
+}
+```
+
 ## 環境変数
 
 | 変数名 | デフォルト値 | 説明 |
