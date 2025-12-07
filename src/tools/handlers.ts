@@ -1,4 +1,4 @@
-import { ollamaRequest, ollamaRequestLong } from "../ollama/client.js";
+import { ollamaRequest, ollamaRequestInference, ollamaRequestPull } from "../ollama/client.js";
 import {
   OllamaGenerateResponseSchema,
   OllamaChatResponseSchema,
@@ -28,7 +28,7 @@ export async function handleOllamaGenerate(raw: unknown): Promise<string> {
   const args: OllamaGenerateArgs = OllamaGenerateSchema.parse(raw);
   assertValidModelName(args.model);
 
-  const data = await ollamaRequest(
+  const data = await ollamaRequestInference(
     "/api/generate",
     {
       method: "POST",
@@ -43,7 +43,6 @@ export async function handleOllamaGenerate(raw: unknown): Promise<string> {
         },
       }),
     },
-    undefined,
     OllamaGenerateResponseSchema
   );
 
@@ -57,7 +56,7 @@ export async function handleOllamaChat(raw: unknown): Promise<string> {
   const args: OllamaChatArgs = OllamaChatSchema.parse(raw);
   assertValidModelName(args.model);
 
-  const data = await ollamaRequest(
+  const data = await ollamaRequestInference(
     "/api/chat",
     {
       method: "POST",
@@ -70,7 +69,6 @@ export async function handleOllamaChat(raw: unknown): Promise<string> {
         },
       }),
     },
-    undefined,
     OllamaChatResponseSchema
   );
 
@@ -128,7 +126,7 @@ export async function handleOllamaPull(raw: unknown): Promise<string> {
   assertValidModelName(args.model);
 
   // Use extended timeout for model pull operations
-  await ollamaRequestLong(
+  await ollamaRequestPull(
     "/api/pull",
     {
       method: "POST",
