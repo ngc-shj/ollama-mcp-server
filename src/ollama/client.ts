@@ -29,8 +29,12 @@ function getOllamaBaseUrl(): string {
 
 const OLLAMA_BASE_URL = getOllamaBaseUrl();
 
-// Default timeout for API requests (15 seconds)
-const DEFAULT_TIMEOUT_MS = 15_000;
+// Default timeout for simple API requests (30 seconds)
+const DEFAULT_TIMEOUT_MS = 30_000;
+
+// Extended timeout for inference operations (5 minutes)
+// Reasoning models may take significant time to generate responses
+const INFERENCE_TIMEOUT_MS = 300_000;
 
 // Extended timeout for model pull operations (10 minutes)
 const PULL_TIMEOUT_MS = 600_000;
@@ -106,9 +110,21 @@ export async function ollamaRequest<T>(
 }
 
 /**
+ * Make a request with extended timeout for inference operations
+ * (generate, chat - reasoning models may take several minutes)
+ */
+export async function ollamaRequestInference<T>(
+  endpoint: string,
+  init: RequestInit = {},
+  responseSchema?: z.ZodSchema<T>
+): Promise<T> {
+  return ollamaRequest<T>(endpoint, init, INFERENCE_TIMEOUT_MS, responseSchema);
+}
+
+/**
  * Make a request with extended timeout (for model pull operations)
  */
-export async function ollamaRequestLong<T>(
+export async function ollamaRequestPull<T>(
   endpoint: string,
   init: RequestInit = {},
   responseSchema?: z.ZodSchema<T>
