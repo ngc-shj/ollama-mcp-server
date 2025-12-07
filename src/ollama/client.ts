@@ -1,5 +1,3 @@
-import { Agent } from "node:http";
-import { Agent as HttpsAgent } from "node:https";
 import type { z } from "zod";
 import {
   OllamaApiError,
@@ -23,9 +21,9 @@ function getOllamaBaseUrl(): string {
 
     // Remove trailing slash
     return url.toString().replace(/\/+$/, "");
-  } catch (error) {
-    console.error("Invalid OLLAMA_BASE_URL:", raw);
-    throw new Error(`Invalid OLLAMA_BASE_URL: ${raw}`);
+  } catch {
+    // Do not log raw env value - it may contain secrets
+    throw new Error("Invalid OLLAMA_BASE_URL configuration");
   }
 }
 
@@ -36,17 +34,6 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 
 // Extended timeout for model pull operations (10 minutes)
 const PULL_TIMEOUT_MS = 600_000;
-
-// Keep-alive agents for connection reuse
-const httpAgent = new Agent({ keepAlive: true });
-const httpsAgent = new HttpsAgent({ keepAlive: true });
-
-/**
- * Get the appropriate agent based on protocol
- */
-function getAgent(): Agent | HttpsAgent {
-  return OLLAMA_BASE_URL.startsWith("https:") ? httpsAgent : httpAgent;
-}
 
 /**
  * Make a request to the Ollama API with timeout, validation, and error handling
@@ -70,8 +57,6 @@ export async function ollamaRequest<T>(
         "Content-Type": "application/json",
         ...init.headers,
       },
-      // @ts-expect-error - Node.js fetch supports dispatcher option
-      dispatcher: getAgent(),
     });
 
     if (!response.ok) {
