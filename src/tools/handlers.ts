@@ -20,6 +20,7 @@ import {
   type OllamaEmbeddingsArgs,
 } from "./schemas.js";
 import { assertValidModelName } from "./validators.js";
+import { processImages } from "../utils/images.js";
 
 /**
  * Generate text using an Ollama model
@@ -27,6 +28,9 @@ import { assertValidModelName } from "./validators.js";
 export async function handleOllamaGenerate(raw: unknown): Promise<string> {
   const args: OllamaGenerateArgs = OllamaGenerateSchema.parse(raw);
   assertValidModelName(args.model);
+
+  // Process images if provided (convert file paths to base64)
+  const images = await processImages(args.images);
 
   const data = await ollamaRequestInference(
     "/api/generate",
@@ -36,6 +40,7 @@ export async function handleOllamaGenerate(raw: unknown): Promise<string> {
         model: args.model,
         prompt: args.prompt,
         system: args.system,
+        images,
         stream: false,
         options: {
           temperature: args.temperature,
@@ -56,13 +61,22 @@ export async function handleOllamaChat(raw: unknown): Promise<string> {
   const args: OllamaChatArgs = OllamaChatSchema.parse(raw);
   assertValidModelName(args.model);
 
+  // Process images in messages (convert file paths to base64)
+  const messagesWithImages = await Promise.all(
+    args.messages.map(async (msg) => ({
+      role: msg.role,
+      content: msg.content,
+      images: await processImages(msg.images),
+    }))
+  );
+
   const data = await ollamaRequestInference(
     "/api/chat",
     {
       method: "POST",
       body: JSON.stringify({
         model: args.model,
-        messages: args.messages,
+        messages: messagesWithImages,
         stream: false,
         options: {
           temperature: args.temperature,
