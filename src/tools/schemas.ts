@@ -10,6 +10,10 @@ export const OllamaGenerateSchema = z.object({
   system: z.string().optional(),
   temperature: z.number().min(0).max(2).optional(),
   max_tokens: z.number().int().positive().max(131072).optional(),
+  images: z
+    .array(z.string())
+    .optional()
+    .describe("Array of image file paths or base64-encoded images for vision models"),
 });
 export type OllamaGenerateArgs = z.infer<typeof OllamaGenerateSchema>;
 
@@ -20,6 +24,10 @@ export const OllamaChatSchema = z.object({
       z.object({
         role: z.enum(["system", "user", "assistant"]),
         content: z.string(),
+        images: z
+          .array(z.string())
+          .optional()
+          .describe("Array of image file paths or base64-encoded images"),
       })
     )
     .min(1, "At least one message is required"),

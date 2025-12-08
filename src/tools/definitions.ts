@@ -7,14 +7,14 @@ export const tools: Tool[] = [
   {
     name: "ollama_generate",
     description:
-      "Generate text using an Ollama model. Use this for single-turn text generation.",
+      "Generate text using an Ollama model. Use this for single-turn text generation. Supports vision models (llava, llama3.2-vision, deepseek-ocr) with image input.",
     inputSchema: {
       type: "object",
       properties: {
         model: {
           type: "string",
           description:
-            "The model to use (e.g., 'llama3.2', 'codellama', 'mistral')",
+            "The model to use (e.g., 'llama3.2', 'codellama', 'mistral', 'llava', 'deepseek-ocr')",
         },
         prompt: {
           type: "string",
@@ -32,20 +32,27 @@ export const tools: Tool[] = [
           type: "number",
           description: "Maximum tokens to generate",
         },
+        images: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "Array of image file paths or base64-encoded images for vision models",
+        },
       },
       required: ["model", "prompt"],
     },
   },
   {
     name: "ollama_chat",
-    description: "Have a multi-turn chat conversation with an Ollama model.",
+    description:
+      "Have a multi-turn chat conversation with an Ollama model. Supports vision models (llava, llama3.2-vision, deepseek-ocr) with image input.",
     inputSchema: {
       type: "object",
       properties: {
         model: {
           type: "string",
           description:
-            "The model to use (e.g., 'llama3.2', 'codellama', 'mistral')",
+            "The model to use (e.g., 'llama3.2', 'codellama', 'mistral', 'llava', 'deepseek-ocr')",
         },
         messages: {
           type: "array",
@@ -58,6 +65,12 @@ export const tools: Tool[] = [
               },
               content: {
                 type: "string",
+              },
+              images: {
+                type: "array",
+                items: { type: "string" },
+                description:
+                  "Array of image file paths or base64-encoded images",
               },
             },
             required: ["role", "content"],

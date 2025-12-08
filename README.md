@@ -6,12 +6,18 @@ A bridge to use Ollama as an MCP server from Claude Code.
 
 ## Features
 
-- **ollama_generate**: Single-turn text generation
-- **ollama_chat**: Multi-turn chat conversations
+- **ollama_generate**: Single-turn text generation (supports vision models with image input)
+- **ollama_chat**: Multi-turn chat conversations (supports vision models with image input)
 - **ollama_list**: List available models
 - **ollama_show**: Show model details
 - **ollama_pull**: Download models
 - **ollama_embeddings**: Generate text embeddings
+
+### Supported Vision Models
+
+- `llava` - General-purpose vision model
+- `llama3.2-vision` - Meta's multimodal model
+- `deepseek-ocr` - OCR-specialized vision model
 
 ## Prerequisites
 
@@ -148,6 +154,16 @@ Generate "3 features of Rust" using Ollama's llama3.2 model
 
 ```text
 I'd like to have Ollama do a code review
+```
+
+### Vision / Image Analysis
+
+```text
+Analyze this image using llava: /path/to/image.jpg
+```
+
+```text
+Use deepseek-ocr to extract text from this document: /path/to/document.png
 ```
 
 ## Troubleshooting

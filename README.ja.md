@@ -6,12 +6,18 @@ Ollama を Claude Code から MCP サーバーとして利用するためのブ�
 
 ## 機能
 
-- **ollama_generate**: 単発のテキスト生成
-- **ollama_chat**: マルチターンのチャット会話
+- **ollama_generate**: 単発のテキスト生成（画像入力対応のビジョンモデルをサポート）
+- **ollama_chat**: マルチターンのチャット会話（画像入力対応のビジョンモデルをサポート）
 - **ollama_list**: 利用可能なモデル一覧
 - **ollama_show**: モデルの詳細情報表示
 - **ollama_pull**: モデルのダウンロード
 - **ollama_embeddings**: テキストのエンベディング生成
+
+### 対応ビジョンモデル
+
+- `llava` - 汎用ビジョンモデル
+- `llama3.2-vision` - Meta のマルチモーダルモデル
+- `deepseek-ocr` - OCR 特化ビジョンモデル
 
 ## 前提条件
 
@@ -148,6 +154,16 @@ Ollama の llama3.2 モデルで「Rust の特徴を3つ」を生成して
 
 ```text
 Ollama でコードレビューをお願いしたい
+```
+
+### ビジョン / 画像解析
+
+```text
+llava を使ってこの画像を解析して: /path/to/image.jpg
+```
+
+```text
+deepseek-ocr でこのドキュメントからテキストを抽出して: /path/to/document.png
 ```
 
 ## トラブルシューティング
